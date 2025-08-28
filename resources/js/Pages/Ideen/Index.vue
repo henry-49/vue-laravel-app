@@ -27,9 +27,15 @@
         onSuccess: () => form.reset(),
     })
 
+    function vote(ideaId, direction) {
+    router.post(route('ideen.vote', ideaId), { direction }, {
+        preserveScroll: true,
+        preserveState: true,
+        only: ['ideas'],
+        })
+    }
 
-    
-// Polling: alle 5 Sekunden neu laden
+    // Polling: alle 5 Sekunden neu laden
     onMounted(() => {
     setInterval(() => {
         router.reload({ only: ['ideas'] })
@@ -71,19 +77,8 @@
             <a :href="route('ideen.edit', idea.id)" class="ml-4 text-blue-500">Bearbeiten</a>
             <button @click="destroy(idea.id)" class="text-red-500">Löschen</button>
         </div>
-      </div>
-    </div>
 
-    <div v-for="idea in props.ideas" :key="idea.id"
-        class="p-3 border rounded bg-white shadow-sm mt-3">
-        <h2 class="font-semibold">{{ idea.title }}</h2>
-        <p class="text-gray-700 text-sm">{{ idea.description }}</p>
-        <div class="text-xs text-gray-500 flex justify-between">
-            <span v-if="idea.category">Kategorie: {{ idea.category }}</span>
-            <span>{{ new Date(idea.created_at).toLocaleString() }}</span>
-        </div>
-
-        <!-- Feedback -->
+           <!-- Feedback -->
         <div class="mt-2 text-sm">
             <span v-if="idea.feedback">
             💬 Feedback: {{ idea.feedback }}
@@ -92,9 +87,16 @@
             ⏳ Feedback wird generiert…
             </span>
         </div>
- </div>
 
+        <!-- Voting -->
+        <div class="mt-3 flex items-center gap-2">
+          <button @click="vote(idea.id, 'up')" class="px-2 py-1 bg-green-500 text-white rounded hover:bg-green-600">👍</button>
+          <button @click="vote(idea.id, 'down')" class="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600">👎</button>
+          <span class="ml-2 font-medium">Votes: {{ idea.votes }}</span>
+        </div>
 
+      </div>
+    </div>
   </div>
 
 

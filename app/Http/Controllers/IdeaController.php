@@ -13,7 +13,7 @@ class IdeaController extends Controller
     public function index()
     {
         return Inertia::render('Ideen/Index', [
-            'ideas' => Idea::latest()->get(),
+            'ideas' => Idea::orderByDesc('votes')->get(),
         ]);
     }
 
@@ -58,5 +58,16 @@ class IdeaController extends Controller
         $idea->delete();
 
         return redirect()->route('ideen.index');
+    }
+
+    public function vote(Idea $idea, Request $request)
+    {
+        $request->validate([
+            'direction' => 'required|in:up,down',
+        ]);
+
+        $idea->increment('votes', $request->direction === 'up' ? 1 : -1);
+
+        return redirect()->back(); // Inertia handled
     }
 }
