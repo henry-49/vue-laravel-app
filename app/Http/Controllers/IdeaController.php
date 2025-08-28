@@ -21,10 +21,37 @@ class IdeaController extends Controller
         $validated = $request->validate([
             'title' => 'required|min:3',
             'description' => 'required',
-            'category' => 'nullable|unique:ideas|max:255',
+            'category' => 'nullable|string|max:255',
         ]);
 
         Idea::create($validated);
+
+        return redirect()->route('ideen.index');
+    }
+
+    public function edit(Idea $idea)
+    {
+        return Inertia::render('Ideen/Edit', [
+            'idea' => $idea,
+        ]);
+    }
+
+    public function update(Request $request, Idea $idea)
+    {
+        $validated = $request->validate([
+            'title' => 'required|min:3',
+            'description' => 'required',
+            'category' => 'nullable|string|max:255',
+        ]);
+
+        $idea->update($validated);
+
+        return redirect()->route('ideen.index');
+    }
+
+    public function destroy(Idea $idea)
+    {
+        $idea->delete();
 
         return redirect()->route('ideen.index');
     }

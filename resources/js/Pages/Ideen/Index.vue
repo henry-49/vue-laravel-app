@@ -1,20 +1,31 @@
 <script setup>
-import { useForm } from '@inertiajs/vue3'
+    import { useForm } from '@inertiajs/vue3'
 
-const props = defineProps({
-  ideas: Array,
-})
+    const props = defineProps({
+    ideas: Array,
+    })
 
-const form = useForm({
-  title: '',
-  description: '',
-  category: '',
-})
+    const form = useForm({
+    title: '',
+    description: '',
+    category: '',
+    })
 
-function submit() {
-  form.post(route('ideen.store'), {
-    onSuccess: () => form.reset(),
-  })
+    function destroy(id) {
+    if (confirm('Sicher löschen?')) {
+        router.delete(route('ideen.destroy', id), {
+        preserveScroll: true,
+        preserveState: true,
+        only: ['ideas'],
+        })
+        }
+    }
+
+    function submit() {
+    form.post(route('ideen.store'), {
+        onSuccess: () => form.reset(),
+    })
+
 }
 </script>
 
@@ -46,6 +57,9 @@ function submit() {
         <div class="text-xs text-gray-500 flex justify-between">
           <span v-if="idea.category">Kategorie: {{ idea.category }}</span>
           <span>{{ new Date(idea.created_at).toLocaleString() }}</span>
+            <!-- Edit / Delete -->
+            <a :href="route('ideen.edit', idea.id)" class="ml-4 text-blue-500">Bearbeiten</a>
+            <button @click="destroy(idea.id)" class="text-red-500">Löschen</button>
         </div>
       </div>
     </div>

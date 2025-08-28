@@ -38,3 +38,6 @@ Route::middleware([
 
 Route::get('/ideen', [IdeaController::class, 'index'])->name('ideen.index');
 Route::post('/ideen', [IdeaController::class, 'store'])->name('ideen.store');
+Route::get('/ideen/{idea}/edit', [IdeaController::class, 'edit'])->name('ideen.edit');
+Route::put('/ideen/{idea}', [IdeaController::class, 'update'])->name('ideen.update');
+Route::delete('/ideen/{idea}', [IdeaController::class, 'destroy'])->name('ideen.destroy');
