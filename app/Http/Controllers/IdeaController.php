@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Idea;
+use App\Jobs\GenerateIdeaFeedback;
 
 class IdeaController extends Controller
 {
@@ -23,8 +24,11 @@ class IdeaController extends Controller
             'description' => 'required',
             'category' => 'nullable|string|max:255',
         ]);
+        
+        $idea = Idea::create($validated);
 
-        Idea::create($validated);
+         // Job dispatchen (läuft asynchron über Queue)
+        GenerateIdeaFeedback::dispatch($idea);
 
         return redirect()->route('ideen.index');
     }

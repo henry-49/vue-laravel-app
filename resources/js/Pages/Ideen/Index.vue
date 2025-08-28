@@ -1,5 +1,6 @@
 <script setup>
     import { useForm } from '@inertiajs/vue3'
+    import { onMounted } from 'vue'
 
     const props = defineProps({
     ideas: Array,
@@ -24,6 +25,15 @@
     function submit() {
     form.post(route('ideen.store'), {
         onSuccess: () => form.reset(),
+    })
+
+
+    
+// Polling: alle 5 Sekunden neu laden
+    onMounted(() => {
+    setInterval(() => {
+        router.reload({ only: ['ideas'] })
+    }, 5000)
     })
 
 }
@@ -63,6 +73,30 @@
         </div>
       </div>
     </div>
+
+    <div v-for="idea in props.ideas" :key="idea.id"
+        class="p-3 border rounded bg-white shadow-sm mt-3">
+        <h2 class="font-semibold">{{ idea.title }}</h2>
+        <p class="text-gray-700 text-sm">{{ idea.description }}</p>
+        <div class="text-xs text-gray-500 flex justify-between">
+            <span v-if="idea.category">Kategorie: {{ idea.category }}</span>
+            <span>{{ new Date(idea.created_at).toLocaleString() }}</span>
+        </div>
+
+        <!-- Feedback -->
+        <div class="mt-2 text-sm">
+            <span v-if="idea.feedback">
+            💬 Feedback: {{ idea.feedback }}
+            </span>
+            <span v-else class="text-gray-400">
+            ⏳ Feedback wird generiert…
+            </span>
+        </div>
+ </div>
+
+
   </div>
+
+
 </template>
 
