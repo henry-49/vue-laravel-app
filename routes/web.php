@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\IdeaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,3 +34,7 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 });
+
+
+Route::get('/ideen', [IdeaController::class, 'index'])->name('ideen.index');
+Route::post('/ideen', [IdeaController::class, 'store'])->name('ideen.store');
