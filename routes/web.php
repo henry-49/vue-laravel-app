@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\IdeaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,3 +34,13 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 });
+
+
+Route::get('/ideen', [IdeaController::class, 'index'])->name('ideen.index');
+Route::post('/ideen', [IdeaController::class, 'store'])->name('ideen.store');
+Route::get('/ideen/{idea}/edit', [IdeaController::class, 'edit'])->name('ideen.edit');
+Route::put('/ideen/{idea}', [IdeaController::class, 'update'])->name('ideen.update');
+Route::delete('/ideen/{idea}', [IdeaController::class, 'destroy'])->name('ideen.destroy');
+
+
+Route::post('/ideen/{idea}/vote', [IdeaController::class, 'vote'])->name('ideen.vote');
